@@ -13,10 +13,10 @@ const PetSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	// dob: {
-	// 	type: Date,
-	// 	required: true,
-	// },
+	dob: {
+		type: Date,
+		required: true,
+	},
 	// imageFile: {
 	// 	type: String,
 	// },

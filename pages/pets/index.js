@@ -4,8 +4,8 @@ import Link from 'next/link';
 
 export async function getStaticProps() {
 	await dbConnect();
-	const result = await Pet.find({});
-	const pets = JSON.parse(JSON.stringify(result));
+	const res = await Pet.find();
+	const pets = JSON.parse(JSON.stringify(res));
 	return { props: { pets: pets } };
 }
 

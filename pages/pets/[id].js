@@ -1,12 +1,10 @@
-import Link from 'next/link';
-
 import Pet from '../../models/Pet';
 import dbConnect from '../../utils/dbConnect';
 
 export const getStaticPaths = async () => {
 	await dbConnect();
-	const results = await Pet.find();
-	const pets = JSON.parse(JSON.stringify(results));
+	const res = await Pet.find();
+	const pets = JSON.parse(JSON.stringify(res));
 
 	const paths = pets.map((pet) => {
 		return {
@@ -31,8 +29,15 @@ export const getStaticProps = async ({ params }) => {
 };
 
 const petPage = ({ pet }) => {
-	console.log('pet in page', pet);
-	return <h1>{pet.name}</h1>;
+	return (
+		<>
+			{console.log(pet)}
+			<h1>{pet.name}</h1>
+			<p>{pet.desc}</p>
+			<p>{pet.age}</p>
+			<p>{pet.dob}</p>
+		</>
+	);
 };
 
 export default petPage;
