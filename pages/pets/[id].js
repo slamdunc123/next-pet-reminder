@@ -1,5 +1,22 @@
 import Pet from '../../models/Pet';
+import { useRouter } from 'next/router';
 import dbConnect from '../../utils/dbConnect';
+
+const petPage = ({ pet }) => {
+	// const router = useRouter();
+	// if (router.isFallback) {
+	// 	return 'Loading...';
+	// }
+	return (
+		<>
+			{console.log(pet)}
+			<h1>{pet.name}</h1>
+			<p>{pet.desc}</p>
+			<p>{pet.age}</p>
+			<p>{pet.dob}</p>
+		</>
+	);
+};
 
 export const getStaticPaths = async () => {
 	await dbConnect();
@@ -14,7 +31,8 @@ export const getStaticPaths = async () => {
 
 	return {
 		paths,
-		fallback: false,
+		// fallback: true,
+		fallback: 'blocking',
 	};
 };
 
@@ -25,19 +43,8 @@ export const getStaticProps = async ({ params }) => {
 
 	return {
 		props: { pet: JSON.parse(JSON.stringify(pet)) },
+		revalidate: 1,
 	};
-};
-
-const petPage = ({ pet }) => {
-	return (
-		<>
-			{console.log(pet)}
-			<h1>{pet.name}</h1>
-			<p>{pet.desc}</p>
-			<p>{pet.age}</p>
-			<p>{pet.dob}</p>
-		</>
-	);
 };
 
 export default petPage;

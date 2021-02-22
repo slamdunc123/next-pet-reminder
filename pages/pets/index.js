@@ -6,7 +6,7 @@ export async function getStaticProps() {
 	await dbConnect();
 	const res = await Pet.find();
 	const pets = JSON.parse(JSON.stringify(res));
-	return { props: { pets: pets } };
+	return { props: { pets: pets }, revalidate: 1 };
 }
 
 const petsPage = ({ pets }) => {

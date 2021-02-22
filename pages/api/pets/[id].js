@@ -1,16 +1,59 @@
-import { pets } from '../../../data';
+import dbConnect from '../../../utils/dbConnect';
+import Pet from '../../../models/Pet';
 
-const getPet = ({ query: { id } }, res) => {
-	console.log(id);
-	const filtered = pets.filter((pet) => pet.id === id);
+dbConnect();
 
-	if (filtered.length > 0) {
-		res.status(200).json(filtered[0]);
-	} else {
-		res.status(404).json({
-			message: `Pet with the id of ${id} is not found`,
-		});
+export default async (req, res) => {
+	const {
+		query: { id },
+		method,
+	} = req;
+
+	switch (method) {
+		case 'GET':
+			try {
+				const pet = await Pet.findById(id);
+
+				if (!pet) {
+					return res.status(400).json({ success: false });
+				}
+
+				res.status(200).json({ success: true, data: pet });
+			} catch (error) {
+				res.status(400).json({ success: false });
+			}
+			break;
+		case 'PUT':
+			try {
+				const pet = await Pet.findByIdAndUpdate(id, req.body, {
+					new: true,
+					runValidators: true,
+				});
+
+				if (!pet) {
+					return res.status(400).json({ success: false });
+				}
+
+				res.status(200).json({ success: true, data: pet });
+			} catch (error) {
+				res.status(400).json({ success: false });
+			}
+			break;
+		case 'DELETE':
+			try {
+				const deletedPet = await Pet.deleteOne({ _id: id });
+
+				if (!deletedPet) {
+					return res.status(400).json({ success: false });
+				}
+
+				res.status(200).json({ success: true, data: {} });
+			} catch (error) {
+				res.status(400).json({ success: false });
+			}
+			break;
+		default:
+			res.status(400).json({ success: false });
+			break;
 	}
 };
-
-export default getPet;
